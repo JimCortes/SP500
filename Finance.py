@@ -69,66 +69,67 @@ st.sidebar.subheader("Indicator")
 indicator = st.sidebar.selectbox("",list(indicators.keys()))
 
 def main ():
+    try:
+        title_left_column, title_center_column_right,title_center_column_left, title_right_column = st.columns(4)
+        title_left_column.write("Symbol")
+        title_center_column_right.write("Name")
+        title_center_column_left.write("Shares Outstanding")
+        title_right_column.write(indicator)
+        st.markdown("___")
 
-    title_left_column, title_center_column_right,title_center_column_left, title_right_column = st.columns(4)
-    title_left_column.write("Symbol")
-    title_center_column_right.write("Name")
-    title_center_column_left.write("Shares Outstanding")
-    title_right_column.write(indicator)
-    st.markdown("___")
-
-    left_column, center_column_right,center_column_left, right_column = st.columns(4)
-    if choice == "":
-        pass
-    else:
-        for i in range(len(choice)):
-            ticker = yf.Ticker(choice[i])
-            print(ticker.info)
-            left_column.write(choice[i])
-            center_column_right.write(ticker.info["shortName"])
-            center_column_left.write(f"{ticker.info['sharesOutstanding']:,.0f}")
-            right_column.write(f"${ticker.info[indicators[indicator]] :,.2f}")
-    
-
-    expander = st.expander("More Analysis")
-
-    ticker = expander.radio("Select a stock",list(choice))
-
-    tecnicalindica = expander.selectbox("Select Tecinical Indicator :",("OBV",'MACD', 'ATR'))
-    
-    
-    if  tecnicalindica == "MACD":
-        a = MACD(ticker)
-        fig, (ax0, ax1) = plt.subplots(nrows=2,ncols=1, sharex=True, sharey=False, figsize=(11, 5), gridspec_kw = {'height_ratios':[3.5,1 ]})
-        grafico1 = a[["Close","MA_Fast","MA_Slow"]]
-        grafico1[-150:].plot(ax=ax0)
-
-        graph2 = a[["MACD","Signal"]]  
-        graph2[-150:].plot(ax=ax1)
-
-        expander.pyplot(fig)
-    elif tecnicalindica == "ATR":
-        a = bollinger(ticker)
-        fig, (ax0,ax1)= plt.subplots(nrows=2,ncols=1, sharex=True, sharey=False, figsize=(11, 5), gridspec_kw = {'height_ratios':[3.5,1 ]})
-
-        grafico1 = a[["High","Low","Close"]]
-        grafico1[-150:].plot(ax=ax1)
+        left_column, center_column_right,center_column_left, right_column = st.columns(4)
+        if choice == "":
+            pass
+        else:
+            for i in range(len(choice)):
+                ticker = yf.Ticker(choice[i])
+                print(ticker.info)
+                left_column.write(choice[i])
+                center_column_right.write(ticker.info["shortName"])
+                center_column_left.write(f"{ticker.info['sharesOutstanding']:,.0f}")
+                right_column.write(f"${ticker.info[indicators[indicator]] :,.2f}")
         
-        graph2 = a[["TR","ATR"]]  
-        graph2[-150:].plot(ax=ax0)
+
+        expander = st.expander("More Analysis")
+
+        ticker = expander.radio("Select a stock",list(choice))
+
+        tecnicalindica = expander.selectbox("Select Tecinical Indicator :",("OBV",'MACD', 'ATR'))
+        
+        
+        if  tecnicalindica == "MACD":
+            a = MACD(ticker)
+            fig, (ax0, ax1) = plt.subplots(nrows=2,ncols=1, sharex=True, sharey=False, figsize=(11, 5), gridspec_kw = {'height_ratios':[3.5,1 ]})
+            grafico1 = a[["Close","MA_Fast","MA_Slow"]]
+            grafico1[-150:].plot(ax=ax0)
+
+            graph2 = a[["MACD","Signal"]]  
+            graph2[-150:].plot(ax=ax1)
+
+            expander.pyplot(fig)
+        elif tecnicalindica == "ATR":
+            a = bollinger(ticker)
+            fig, (ax0,ax1)= plt.subplots(nrows=2,ncols=1, sharex=True, sharey=False, figsize=(11, 5), gridspec_kw = {'height_ratios':[3.5,1 ]})
+
+            grafico1 = a[["High","Low","Close"]]
+            grafico1[-150:].plot(ax=ax1)
+            
+            graph2 = a[["TR","ATR"]]  
+            graph2[-150:].plot(ax=ax0)
 
 
-        expander.pyplot(fig)
-    elif tecnicalindica == "OBV":
-        df = OBV(ticker)
+            expander.pyplot(fig)
+        elif tecnicalindica == "OBV":
+            df = OBV(ticker)
 
-        fig, ax= plt.subplots()
-        df['obv'].plot(ax=ax)
+            fig, ax= plt.subplots()
+            df['obv'].plot(ax=ax)
 
-        expander.pyplot(fig)
-    else:
+            expander.pyplot(fig)
+        else:
+            pass
+    except:
         pass
-
 if __name__ == "__main__":
     main()
 
