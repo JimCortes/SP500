@@ -94,10 +94,10 @@ def main ():
 
     ticker = expander.radio("Select a stock",list(choice))
 
-    tecnicalindica = expander.selectbox("Select Tecinical Indicator :",("OBV",'MCDA', 'ATR'))
+    tecnicalindica = expander.selectbox("Select Tecinical Indicator :",("OBV",'MACD', 'ATR'))
     
     
-    if  tecnicalindica == "MCDA":
+    if  tecnicalindica == "MACD":
         a = MACD(ticker)
         fig, (ax0, ax1) = plt.subplots(nrows=2,ncols=1, sharex=True, sharey=False, figsize=(11, 5), gridspec_kw = {'height_ratios':[3.5,1 ]})
         grafico1 = a[["Close","MA_Fast","MA_Slow"]]
